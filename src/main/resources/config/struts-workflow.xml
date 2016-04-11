@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="workflow" extends="authed" namespace="/workflow">
+		<interceptors>
+			<interceptor-stack name="uploadInterceptorStack">
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="exceptionInterceptor" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="userAuthInterceptor" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="multiselect" />
+				<interceptor-ref name="OutputInterceptor" />
+				<interceptor-ref name="actionMappingParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="uploadInterceptorStack" />
+		<action name="deployList" class="wfManagementAction" method="deployList">
+			<result>/apps/workflow/deploy_list.jsp</result>
+		</action>
+		<action name="addDeploy">
+			<result>/apps/workflow/deploy_add.jsp</result>
+		</action>
+		<action name="deploy" class="wfManagementAction" method="deploy">
+			<result type="redirect">deployList.action?_tips=tip_save_success</result>
+		</action>
+		<action name="deleteDeployment" class="wfManagementAction"
+			method="deleteDeployment">
+			<result type="redirect">deployList.action?_tips=tip_delete_success
+			</result>
+		</action>
+
+
+
+
+		<action name="processList" class="wfManagementAction" method="processList">
+			<result>/apps/workflow/process_list.jsp</result>
+		</action>
+		<action name="viewProcess" class="wfManagementAction" method="viewProcess">
+			<result>/apps/workflow/process_view.jsp</result>
+		</action>
+		<action name="viewImage" class="wfManagementAction" method="viewImage">
+		</action>
+		<action name="activateProcessDefinition" class="wfManagementAction"
+			method="activateProcessDefinition">
+			<result type="redirect">processList.action?_tips=tip_lock_success
+			</result>
+		</action>
+		<action name="suspendProcessDefinition" class="wfManagementAction"
+			method="suspendProcessDefinition">
+			<result type="redirect">processList.action?_tips=tip_unlock_success
+			</result>
+		</action>
+
+		<action name="actor" class="wfActorAction" method="update">
+			<result type="redirect">viewProcess.action?processDefinitionId=${config.processDefinitionId}
+			</result>
+		</action>
+		<action name="actorSetting" class="wfActorAction" method="edit">
+			<result>/apps/workflow/acitvityconfig_edit.jsp</result>
+		</action>
+
+	</package>
+
+
+	<package name="workingday" extends="authed" namespace="/workflow/workingday">
+		<action name="*" class="workingDayAction" method="{1}">
+			<result name="list">/apps/workflow/workingday_list.jsp</result>
+			<result name="listredirect" type="redirect">list.action?year=${year}</result>
+		</action>
+	</package>
+
+
+
+	<package name="process" extends="authed" namespace="/process">
+		<global-results>
+			<result name="start">/apps/process/${redirect}{1}.jsp</result>
+			<result name="saved" type="redirect">selectActor.action?_tips=tip_save_success&amp;processDefinitionKey=${processDefinitionKey}&amp;processDefinitionId=${processDefinitionId}&amp;processInstanceId=${processInstanceId}
+			</result>
+			<result name="dealed" type="redirect">selectActor.action?_tips=tip_save_success&amp;processDefinitionKey=${processDefinitionKey}&amp;processDefinitionId=${processDefinitionId}&amp;processInstanceId=${processInstanceId}
+			</result>
+			<result name="selectActor">/apps/process/process_selectActor.jsp</result>
+			<result name="view">/apps/process/${redirect}view.jsp</result>
+			<result name="taskStart">/apps/process/${redirect}task_start.jsp</result>
+			<result name="cliam">/apps/process/${redirect}cliam.jsp</result>
+			<result name="image">/apps/process/${redirect}image.jsp</result>
+			<result name="cliamed" type="redirect">${actionRedirect}startTask.action?_tips=tip_save_success&amp;taskId=${taskId}
+			</result>
+			<result name="started" type="redirect">${actionRedirect}selectActor.action?startedList.action?_tips=tip_save_success&amp;processDefinitionKey=${processDefinitionKey}&amp;processDefinitionId=${processDefinitionId}
+			</result>
+			<result></result>
+			<result name="all" type="redirect">${actionRedirect}allList.action?_tips=tip_save_success&amp;processDefinitionKey=${processDefinitionKey}&amp;processDefinitionId=${processDefinitionId}
+			</result>
+			<result name="queue" type="redirect">${actionRedirect}queueList.action?_tips=tip_save_success&amp;processDefinitionKey=${processDefinitionKey}&amp;processDefinitionId=${processDefinitionId}
+			</result>
+			<result name="assigned" type="redirect">${actionRedirect}assignedList.action?_tips=tip_save_success&amp;processDefinitionKey=${processDefinitionKey}&amp;processDefinitionId=${processDefinitionId}
+			</result>
+		</global-results>
+		<action name="*List" class="wfProcessAction" method="{1}">
+			<result name="success">/apps/process/${redirect}process_{1}.jsp</result>
+		</action>
+		<action name="*" class="wfProcessAction" method="{1}">
+		</action>
+		<!-- <action name="startInstance" class="wfProcessAction" method="start"> 
+			<result>/apps/process/${redirect}start.jsp</result> </action> <action name="save" 
+			class="wfProcessAction" method="save"> </action> <action name="viewInstance" 
+			class="wfProcessAction" method="viewInstance"> <result>/apps/process/${redirect}view.jsp</result> 
+			</action> <action name="viewInstanceHistory" class="wfProcessAction" method="viewInstanceHistory"> 
+			<result>/apps/process/${redirect}view.jsp</result> </action> <action name="cliam" 
+			class="wfProcessAction" method="cliam"> <result type="redirect">${redirect}queue.action?_tips=tip_save_success 
+			</result> </action> <action name="uncliam" class="wfProcessAction" method="uncliam"> 
+			<result type="redirect">${redirect}queue.action?_tips=tip_save_success </result> 
+			</action> <action name="delegate" class="wfProcessAction" method="delegate"> 
+			<result type="redirect">${redirect}queue.action?_tips=tip_save_success</result> 
+			</action> <action name="complete" class="wfProcessAction" method="complete"> 
+			<result type="redirect">${redirect}assigned.action?_tips=tip_save_success</result> 
+			</action> <action name="startTask" class="wfProcessAction" method="startTask"> 
+			<result>/apps/process/${redirect}task_start.jsp</result> </action> <action 
+			name="dealTask" class="wfProcessAction" method="dealTask"> <result type="redirect">${redirect}assigned.action</result> 
+			</action> -->
+	</package>
+
+</struts>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<id>worklow</id>
+	<handler>works.tonny.apps.deploy.DefaultModuleInstallHandler</handler>
+	<name>Workflow API</name>
+	<dependency>core</dependency>
+	<desc>工作流接口定义！</desc>
+	<version>project_version</version>
+	<page>
+		<admin-menu>/apps/workflow_menu.jsp</admin-menu>
+	</page>
+	<resource>
+		<db-mysql>sql/workflow.mysql.sql</db-mysql>
+		<db-mysql-init>sql/workflow.mysql.init.sql</db-mysql-init>
+		<struts>config/struts-workflow.xml</struts>
+	</resource>
+</module>

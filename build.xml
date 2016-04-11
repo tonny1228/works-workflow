@@ -1,0 +1,44 @@
+<?xml version="1.0"  encoding="UTF-8" ?>
+<project name="copy" basedir="." default="workflow.build.zxtx">
+	<property name="folder" location="D:\Workspace\zxtx-apps\apps-workflow" />
+	<target name="workflow.build.zxtx">
+		<copy todir="${folder}/src/main/java/com/zxtx/" overwrite="true"
+			preserveLastModified="true">
+			<fileset dir="src/main/java/works/tonny/">
+			</fileset>
+		</copy>
+		<copy todir="${folder}/src/main/resources" overwrite="true"
+			preserveLastModified="true">
+			<fileset dir="src/main/resources">
+			</fileset>
+		</copy>
+		<!--
+		<copy todir="${folder}/" overwrite="true"
+			preserveLastModified="true">
+			<fileset file="pom.xml">
+			</fileset>
+		</copy>
+		-->
+		<replace token="works.tonny.apps" value="com.zxtx.apps"
+			encoding="UTF-8">
+			<fileset dir="${folder}/src/" includes="**/*.java">
+			</fileset>
+			<fileset dir="${folder}/src/" includes="**/*.xml">
+			</fileset>
+			<fileset dir="${folder}/" includes="pom.xml">
+			</fileset>
+			<fileset dir="${folder}/src/" includes="**/*.tld">
+			</fileset>
+			<fileset dir="${folder}/src/" includes="**/*.properties">
+			</fileset>
+			<fileset dir="${folder}/src/" includes="**/*.jsp">
+			</fileset>
+		</replace>
+		<replaceregexp flags="s" encoding="utf-8">
+			<regexp pattern="(/\*\*)?([^/]+)?(/)?(\r)?(\n)?package\s+com\.zxtx\.apps(\.\w+)(.*)" />
+			<substitution expression="/**&#10; * 代码拷贝自works.tonny.apps\6.请不要修改源代码，任何的修改都可能在未来的版本中被覆盖。 \2&#13; */&#13;package com.zxtx.apps\6\7" />
+			<fileset dir="${folder}/src/" includes="**/*.java">
+			</fileset>
+		</replaceregexp>
+	</target>
+</project>
